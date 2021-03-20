@@ -1,0 +1,49 @@
+
+
+// Låt användare lägga till ord. Spara i localstorage
+
+// Fixa så att skiten ser bra ut på mobiler
+
+/////////////////////////////
+//////// Ongoing/////////////
+/////////////////////////////
+
+// När brädet laddas i början så ska isValidBoard köras inte och inte bara sättas till true
+// Visa vad som är fel
+
+/////////////////////////////
+//////// DONE ///////////////
+/////////////////////////////
+// När man skrivit en bokstav i en ruta så ska nästa ruta markeras DONE
+
+// Säker på att du vill radera? DONE
+// Radera brädet DONE
+// Spara brädet i localstorage DONE
+// Spara flera bräden DONE
+// Välj bland bräden DONE
+// Spara brädet i localstorage DONE
+// Läs brädet från localstorage DONE
+
+// Hitta på något sätt att spara tiles (sätta till final) DONE
+
+// Markera bokstäverna när man valt ord. DONE
+
+// När man av markerar ett ord i tabellen så ska det försvinna från brädet. DONE
+
+// Gör tester
+  // column points
+    // Gör så att två ord i en column räknas om de inte är final
+  // column solver Done
+  // count points
+  // row points
+  // row solver
+  // solver util Done
+
+// Gör fler Word.json filer där varje fil innehåller ord med enbart x längd.
+/ Detta kommer göra att man hittar ord mycket snabbare eftersom det då inte behövs
+/ letas genom hela 450k ord varje gång
+// Resultat för mang och mange. mang ska inte finnas för bokstaven efteråt är e
+// Räkna poäng på ord som skapas bredvid huvudordet DONE
+// När man sparar brädet visa vilka bokstäver som är kvar av spelarens bokstäver DONE
+// Räkna inte med special rutorna om de redan har räknats DONE
+// visa bara 15 resultat DONE

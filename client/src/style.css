@@ -1,0 +1,79 @@
+@import "~bulma/css/bulma.css";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+
+h1, h4, h5, button, p {
+  font-family: 'Roboto', sans-serif;
+}
+
+.board {
+  width: 600px;
+}
+
+button {
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  border: none;
+}
+
+.my-row {
+  display: flex;
+  width: fit-content;
+  background-color: rgba(33,33,33, 0.9);
+}
+
+.tile_heading {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+.board-tile {
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase;
+  width: 35px;
+  height: 35px;
+  margin: 3px;
+  color: white;
+
+  text-shadow: 0 0 0 gray;
+  text-align: center;
+  border: none;
+}
+
+.board-tile--black {
+  background: rgb(66,66,66);
+  background: linear-gradient(180deg, rgba(66,66,66,1) 19%, rgba(97,97,97,1) 72%);
+}
+
+.board-tile--test {
+  background: linear-gradient(180deg, rgba(103,58,183,1) 19%, rgba(126,87,194,1) 72%);
+}
+
+.board-tile--final {
+  background-color: #607D8B;
+}
+
+.board-tile--tl {
+  background-color:#1565C0;
+}
+
+.board-tile--dl {
+  background-color:#2E7D32;
+}
+
+.board-tile--dw {
+  background-color:#EF6C00;
+}
+
+.board-tile--tw {
+  background-color:#C62828;
+}
+
+.board-tile--error {
+  background-color:#BF360C;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
