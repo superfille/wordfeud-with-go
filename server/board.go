@@ -16,6 +16,7 @@ type Tile struct {
 	x     int
 	y     int
 	c     string
+	s     string
 	fixed bool
 }
 
@@ -31,10 +32,44 @@ func (board *Board) initializeBoard() {
 				x:     x,
 				y:     y,
 				c:     "",
+				s:     getSpecialCharacter(x, y),
 				fixed: false,
 			}
 		}
 	}
+}
+
+func isPosition(x int, y int, positions []Position) bool {
+	for i := 0; i < len(positions); i++ {
+		if positions[i].row == x && positions[i].column == y {
+			return true
+		}
+	}
+	return false
+}
+
+func getSpecialCharacter(x int, y int) string {
+	twPositions := []Position{{0, 4}, {0, 10}, {4, 0}, {4, 14}, {10, 0}, {10, 14}, {14, 4}, {14, 10}}
+	tlPositions := []Position{{0, 0}, {0, 14}, {1, 5}, {1, 9}, {3, 3}, {3, 11}, {5, 1}, {5, 5}, {5, 9}, {5, 13}, {9, 1}, {9, 5}, {9, 9}, {9, 13}, {11, 3}, {11, 11}, {13, 5}, {13, 9}, {14, 0}, {14, 14}}
+	dlPoisitions := []Position{{0, 7}, {1, 1}, {1, 13}, {2, 6}, {2, 8}, {4, 6}, {4, 8}, {6, 2}, {6, 4}, {6, 10}, {6, 12}, {7, 0}, {7, 14}, {8, 2}, {8, 4}, {8, 10}, {8, 12}, {10, 6}, {10, 8}, {12, 6}, {12, 8}, {13, 1}, {13, 13}, {14, 7}}
+	dwPositions := []Position{{2, 2}, {2, 12}, {3, 7}, {4, 4}, {4, 10}, {7, 3}, {7, 11}, {10, 4}, {10, 10}, {11, 7}, {12, 2}, {12, 12}}
+
+	if isPosition(x, y, twPositions) {
+		return "tw"
+	}
+
+	if isPosition(x, y, tlPositions) {
+		return "tl"
+	}
+
+	if isPosition(x, y, dlPoisitions) {
+		return "dl"
+	}
+
+	if isPosition(x, y, dwPositions) {
+		return "dw"
+	}
+	return ""
 }
 
 func convertStringToInt(char string) int {
@@ -56,7 +91,11 @@ func (board *Board) parseRequest(boardAsString string) {
 		c := split[2]
 
 		board.tiles[x][y].c = c
-		board.tiles[x][y].fixed = true
+		if c == "c" || c == "r" || c == "n" {
+			board.tiles[x][y].fixed = false
+		} else {
+			board.tiles[x][y].fixed = true
+		}
 	}
 }
 
