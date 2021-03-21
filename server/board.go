@@ -91,11 +91,7 @@ func (board *Board) parseRequest(boardAsString string) {
 		c := split[2]
 
 		board.tiles[x][y].c = c
-		if c == "c" || c == "r" || c == "n" {
-			board.tiles[x][y].fixed = false
-		} else {
-			board.tiles[x][y].fixed = true
-		}
+		board.tiles[x][y].fixed = true
 	}
 }
 

@@ -55,7 +55,7 @@ func countWordPoint(currentPoints int, tile Tile) int {
 	return currentPoints
 }
 
-func countPoints(board Board) int {
+func countPoints(board *Board) int {
 	column := countColumnPoints(board)
 	// row := countRowPoints(board)
 

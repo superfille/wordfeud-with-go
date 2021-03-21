@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func specials(currentPoints int, matchedWord MatchedWord, board Board) int {
+func specials(currentPoints int, matchedWord MatchedWord, board *Board) int {
 	points := currentPoints
 	for i := 0; i < len(matchedWord.word); i++ {
 		points = countWordPoint(currentPoints, board.tiles[matchedWord.row+i][matchedWord.column])
@@ -11,7 +11,7 @@ func specials(currentPoints int, matchedWord MatchedWord, board Board) int {
 	return points
 }
 
-func columnPoints(matchedWord MatchedWord, board Board) int {
+func columnPoints(matchedWord MatchedWord, board *Board) int {
 	points := 0
 	for i := 0; i < len(matchedWord.word); i++ {
 		points += countCharPoint(board.tiles[matchedWord.row+i][matchedWord.column], string(matchedWord.word[i]))
@@ -20,7 +20,7 @@ func columnPoints(matchedWord MatchedWord, board Board) int {
 	return specials(points, matchedWord, board)
 }
 
-func findColumnWords(board Board) []MatchedWord {
+func findColumnWords(board *Board) []MatchedWord {
 	wordsFound := []MatchedWord{}
 
 	for column := 0; column < boardLength; column++ {
@@ -69,7 +69,7 @@ func findColumnWords(board Board) []MatchedWord {
 	return wordsFound
 }
 
-func countColumnPoints(board Board) int {
+func countColumnPoints(board *Board) int {
 	wordsFound := findColumnWords(board)
 	fmt.Println(wordsFound)
 	points := 0

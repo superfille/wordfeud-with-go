@@ -1,17 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 )
-
-type ColumnMatch struct {
-	allWords        []string
-	constructedWord string // Could be *be*apa  [][b][e][][a][p][a];
-	playerChars     string
-	board           *Board
-	row             int
-	column          int
-}
 
 type MatchedWord struct {
 	word                 string
@@ -22,17 +14,29 @@ type MatchedWord struct {
 	column               int
 }
 
-func getConstructedWordFromBoard(board *Board, start int, playerLength int, column int) string {
+type ColumnMatch struct {
+	allWords        []string
+	constructedWord string // Could be *be*apa  [][b][e][][a][p][a];
+	playerChars     string
+	board           *Board
+	row             int
+	column          int
+}
+
+func getConstructedWordFromBoard(board *Board, playerLength int, startRow int, column int) string {
 	charsUsed := 0
-	row := start
+	row := startRow
 	index := 0
 	constructedWord := ""
 
 	for row < boardLength {
+		if column == 10 {
+			fmt.Println(board.tiles[row][column].c, row)
+		}
 		if hasChar(board, row, column) {
 			constructedWord += board.tiles[row][column].c
-			index += 1
-			row += 1
+			index++
+			row++
 			continue
 		}
 
@@ -40,25 +44,26 @@ func getConstructedWordFromBoard(board *Board, start int, playerLength int, colu
 			constructedWord += "*"
 		}
 
-		charsUsed += 1
+		charsUsed++
 
 		// The next tile is not the end of the board and is not empty, we can continue
 		if row+1 < boardLength && hasChar(board, row+1, column) {
-			index += 1
-			row += 1
+			index++
+			row++
 			continue
 		}
 
 		if charsUsed >= playerLength {
 			break
 		}
-		index += 1
-		row += 1
+		index++
+		row++
 	}
 
 	splitted := strings.Split(constructedWord, "")
 	noStar := someString(splitted, func(c1 string) bool { return c1 != "*" })
 	hasStar := someString(splitted, func(c1 string) bool { return c1 == "*" })
+
 	if noStar && hasStar {
 		return constructedWord
 	}
@@ -66,7 +71,7 @@ func getConstructedWordFromBoard(board *Board, start int, playerLength int, colu
 	return ""
 }
 
-func positionAfterCurrentWordIsEmpty(word string, columnMatch ColumnMatch) bool {
+func positionAfterCurrentWordIsEmpty(word string, columnMatch *ColumnMatch) bool {
 	if columnMatch.row+len(word) < boardLength {
 		if hasChar(columnMatch.board, columnMatch.row+len(word), columnMatch.column) {
 			return false
@@ -75,7 +80,7 @@ func positionAfterCurrentWordIsEmpty(word string, columnMatch ColumnMatch) bool 
 	return true
 }
 
-func wordsThatMatchPositions(payload ColumnMatch) []MatchedWord {
+func wordsThatMatchPositions(payload *ColumnMatch) []MatchedWord {
 	init := []MatchedWord{}
 	return reduceMatchedWords(payload.allWords, init,
 		func(accumulated []MatchedWord, libraryWord string) []MatchedWord {
@@ -110,11 +115,11 @@ func solveColumn(playerChars string, board *Board, column int) []MatchedWord {
 			continue
 		}
 
-		constructedWord := getConstructedWordFromBoard(board, row, column, len(playerChars))
+		constructedWord := getConstructedWordFromBoard(board, len(playerChars), row, column)
 
 		if constructedWord != "" {
 			cMatch := ColumnMatch{
-				allWords:        []string{"hej"}, //WordHandler.Instance.getWordsWithAtLeastLength(constructedWord.length),
+				allWords:        []string{"corn", "pob", "cab", "poop"}, //WordHandler.Instance.getWordsWithAtLeastLength(constructedWord.length),
 				constructedWord: constructedWord,
 				playerChars:     playerChars,
 				board:           board,
@@ -122,10 +127,10 @@ func solveColumn(playerChars string, board *Board, column int) []MatchedWord {
 				column:          column,
 			}
 
-			matches := wordsThatMatchPositions(cMatch)
+			matches := wordsThatMatchPositions(&cMatch)
 			// result
 			matches = filterMatchedWords(func(matchedWord MatchedWord) bool {
-				return wordIsValidInBoard(matchedWord, board)
+				return wordIsValidInBoard(&matchedWord, board)
 			})(matches)
 
 			matches = mapMatched(func(matchedWord MatchedWord) MatchedWord {
@@ -138,6 +143,53 @@ func solveColumn(playerChars string, board *Board, column int) []MatchedWord {
 	return result
 }
 
-func wordIsValidInBoard(matchedWord MatchedWord, board *Board) bool {
-	return true
+func setColumnWordInBoard(columnWord *MatchedWord, board *Board) {
+	for i := 0; i < len(columnWord.word); i++ {
+		if board.tiles[columnWord.row+i][columnWord.column].fixed == false {
+			board.tiles[columnWord.row+i][columnWord.column].c = string(columnWord.word[i])
+		}
+	}
+}
+
+func removeColumnWordFromBoard(columnWord *MatchedWord, board *Board) {
+	for i := 0; i < len(columnWord.word); i++ {
+		if board.tiles[columnWord.row+i][columnWord.column].fixed == false {
+			board.tiles[columnWord.row+i][columnWord.column].c = ""
+		}
+	}
+}
+
+func countColumnPointsHelper(columnWord *MatchedWord, board *Board) int {
+	setColumnWordInBoard(columnWord, board)
+
+	points := countPoints(board)
+
+	removeColumnWordFromBoard(columnWord, board)
+
+	return points
+}
+
+func wordIsValidInBoard(columnWord *MatchedWord, board *Board) bool {
+	setColumnWordInBoard(columnWord, board)
+
+	isValid := board.isValid()
+
+	removeColumnWordFromBoard(columnWord, board)
+
+	return isValid
+}
+
+func solveColumns(board *Board, chars string) []MatchedWord {
+	list := []MatchedWord{}
+
+	for column := 0; column < boardLength; column++ {
+
+		matcheds := solveColumn(chars, board, column)
+
+		for i := 0; i < len(matcheds); i++ {
+			list = append(list, matcheds[i])
+		}
+	}
+
+	return list
 }
