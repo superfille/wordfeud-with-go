@@ -30,9 +30,6 @@ func getConstructedWordFromBoard(board *Board, playerLength int, startRow int, c
 	constructedWord := ""
 
 	for row < boardLength {
-		if column == 10 {
-			fmt.Println(board.tiles[row][column].c, row)
-		}
 		if hasChar(board, row, column) {
 			constructedWord += board.tiles[row][column].c
 			index++
@@ -119,7 +116,7 @@ func solveColumn(playerChars string, board *Board, column int) []MatchedWord {
 
 		if constructedWord != "" {
 			cMatch := ColumnMatch{
-				allWords:        []string{"corn", "pob", "cab", "poop"}, //WordHandler.Instance.getWordsWithAtLeastLength(constructedWord.length),
+				allWords:        lib.words,
 				constructedWord: constructedWord,
 				playerChars:     playerChars,
 				board:           board,
@@ -128,6 +125,7 @@ func solveColumn(playerChars string, board *Board, column int) []MatchedWord {
 			}
 
 			matches := wordsThatMatchPositions(&cMatch)
+
 			// result
 			matches = filterMatchedWords(func(matchedWord MatchedWord) bool {
 				return wordIsValidInBoard(&matchedWord, board)
@@ -135,8 +133,13 @@ func solveColumn(playerChars string, board *Board, column int) []MatchedWord {
 
 			matches = mapMatched(func(matchedWord MatchedWord) MatchedWord {
 				matchedWord.points = countPointsHelper(&matchedWord, board)
+				fmt.Println(matchedWord.points, matchedWord.word)
 				return matchedWord
 			})(matches)
+
+			for i := 0; i < len(matches); i++ {
+				result = append(result, matches[i])
+			}
 		}
 	}
 

@@ -57,7 +57,7 @@ func findColumnWords(board *Board) []MatchedWord {
 					matchedWords[len(matchedWords)-1].hasNotFinalCharacter || !board.tiles[row][column].fixed
 			}
 		}
-		fmt.Println("matchedWords", matchedWords)
+
 		// Word has to be at least 2 characters and contain one character that is not final
 		for i := 0; i < len(matchedWords); i++ {
 			if len(matchedWords[i].word) > 1 && matchedWords[i].row >= 0 && matchedWords[i].hasNotFinalCharacter {

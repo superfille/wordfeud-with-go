@@ -178,7 +178,7 @@ func (board *Board) getVerticalWord(row int, column int) string {
 
 func (board *Board) isValid() bool {
 	if !wordsAreConnected(board) {
-		fmt.Println("Board is not connected")
+		// fmt.Println("Board is not connected")
 		return false
 	}
 
@@ -188,6 +188,7 @@ func (board *Board) isValid() bool {
 		for column := 0; column < boardLength; column++ {
 			if board.isStartOfHorizontalWord(row, column) {
 				word := board.getHorizontalWord(row, column)
+
 				if !lib.isWord(word) {
 					invalidWords = append(invalidWords, word)
 				}
@@ -201,6 +202,39 @@ func (board *Board) isValid() bool {
 			}
 		}
 	}
-
 	return len(invalidWords) == 0
+}
+
+func (board *Board) printBoard() {
+	for row := 0; row < boardLength; row++ {
+		columns := strconv.Itoa(row + 1)
+		if row < 9 {
+			columns += "  | "
+		} else {
+			columns += " | "
+		}
+		if row == 0 {
+			columnIndexes := "     "
+			for i := 0; i < boardLength; i++ {
+				if i < 9 {
+					if i == 8 {
+						columnIndexes += strconv.Itoa(i+1) + "  "
+					} else {
+						columnIndexes += strconv.Itoa(i+1) + "   "
+					}
+				} else {
+					columnIndexes += strconv.Itoa(i+1) + "  "
+				}
+			}
+			fmt.Println(columnIndexes)
+		}
+		for column := 0; column < boardLength; column++ {
+			if board.tiles[row][column].c == "" {
+				columns += "X" + " | "
+			} else {
+				columns += board.tiles[row][column].c + " | "
+			}
+		}
+		fmt.Println(columns)
+	}
 }
