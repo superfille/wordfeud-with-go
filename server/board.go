@@ -189,14 +189,14 @@ func (board *Board) isValid() bool {
 			if board.isStartOfHorizontalWord(row, column) {
 				word := board.getHorizontalWord(row, column)
 
-				if !lib.isWord(word) {
+				if !library.isWord(word) {
 					invalidWords = append(invalidWords, word)
 				}
 			}
 
 			if board.isStartOfVerticalWord(row, column) {
 				word := board.getVerticalWord(row, column)
-				if !lib.isWord(word) {
+				if !library.isWord(word) {
 					invalidWords = append(invalidWords, word)
 				}
 			}

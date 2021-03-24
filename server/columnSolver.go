@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -14,8 +13,7 @@ type MatchedWord struct {
 	column               int
 }
 
-type ColumnMatch struct {
-	allWords        []string
+type WordMatch struct {
 	constructedWord string // Could be *be*apa  [][b][e][][a][p][a];
 	playerChars     string
 	board           *Board
@@ -23,7 +21,67 @@ type ColumnMatch struct {
 	column          int
 }
 
-func getConstructedWordFromBoard(board *Board, playerLength int, startRow int, column int) string {
+type ColumnSolver struct {
+	board Board
+}
+
+func (solver *ColumnSolver) solveColumns(chars string) []MatchedWord {
+	list := []MatchedWord{}
+
+	for column := 0; column < boardLength; column++ {
+
+		matcheds := solver.solveColumn(chars, column)
+
+		for i := 0; i < len(matcheds); i++ {
+			list = append(list, matcheds[i])
+		}
+	}
+
+	return list
+}
+
+func (solver *ColumnSolver) solveColumn(playerChars string, column int) []MatchedWord {
+	result := []MatchedWord{}
+
+	for row := 0; row < boardLength; row++ {
+		if row > 0 && hasChar(&solver.board, row-1, column) {
+			// We start words when there is nothing above
+			continue
+		}
+
+		constructedWord := getConstructedColumn(&solver.board, len(playerChars), row, column)
+
+		if constructedWord != "" {
+			cMatch := WordMatch{
+				constructedWord: constructedWord,
+				playerChars:     playerChars,
+				board:           &solver.board,
+				row:             row,
+				column:          column,
+			}
+
+			matches := wordsThatMatchPositions(&cMatch, "column")
+
+			// result
+			matches = filterMatchedWords(func(matchedWord MatchedWord) bool {
+				return solver.wordIsValidInBoard(&matchedWord)
+			})(matches)
+
+			matches = mapMatched(func(matchedWord MatchedWord) MatchedWord {
+				matchedWord.points = solver.countColumnPointsHelper(&matchedWord)
+				return matchedWord
+			})(matches)
+
+			for i := 0; i < len(matches); i++ {
+				result = append(result, matches[i])
+			}
+		}
+	}
+
+	return result
+}
+
+func getConstructedColumn(board *Board, playerLength int, startRow int, column int) string {
 	charsUsed := 0
 	row := startRow
 	index := 0
@@ -68,7 +126,7 @@ func getConstructedWordFromBoard(board *Board, playerLength int, startRow int, c
 	return ""
 }
 
-func positionAfterCurrentWordIsEmpty(word string, columnMatch *ColumnMatch) bool {
+func positionAfterCurrentWordIsEmpty(word string, columnMatch *WordMatch) bool {
 	if columnMatch.row+len(word) < boardLength {
 		if hasChar(columnMatch.board, columnMatch.row+len(word), columnMatch.column) {
 			return false
@@ -77,9 +135,9 @@ func positionAfterCurrentWordIsEmpty(word string, columnMatch *ColumnMatch) bool
 	return true
 }
 
-func wordsThatMatchPositions(payload *ColumnMatch) []MatchedWord {
+func wordsThatMatchPositions(payload *WordMatch, direction string) []MatchedWord {
 	init := []MatchedWord{}
-	return reduceMatchedWords(payload.allWords, init,
+	return reduceMatchedWords(library.words, init,
 		func(accumulated []MatchedWord, libraryWord string) []MatchedWord {
 			if len(libraryWord) <= 1 || len(libraryWord) > len(payload.constructedWord) {
 				return accumulated
@@ -92,7 +150,7 @@ func wordsThatMatchPositions(payload *ColumnMatch) []MatchedWord {
 			if isWordFine(libraryWord, payload.constructedWord, payload.playerChars) {
 				return append(accumulated, MatchedWord{
 					word:      libraryWord,
-					direction: "column",
+					direction: direction,
 					row:       payload.row,
 					column:    payload.column,
 					points:    0,
@@ -101,49 +159,6 @@ func wordsThatMatchPositions(payload *ColumnMatch) []MatchedWord {
 
 			return accumulated
 		})
-}
-
-func solveColumn(playerChars string, board *Board, column int) []MatchedWord {
-	result := []MatchedWord{}
-
-	for row := 0; row < boardLength; row++ {
-		if row > 0 && hasChar(board, row-1, column) {
-			// We start words when there is nothing above
-			continue
-		}
-
-		constructedWord := getConstructedWordFromBoard(board, len(playerChars), row, column)
-
-		if constructedWord != "" {
-			cMatch := ColumnMatch{
-				allWords:        lib.words,
-				constructedWord: constructedWord,
-				playerChars:     playerChars,
-				board:           board,
-				row:             row,
-				column:          column,
-			}
-
-			matches := wordsThatMatchPositions(&cMatch)
-
-			// result
-			matches = filterMatchedWords(func(matchedWord MatchedWord) bool {
-				return wordIsValidInBoard(&matchedWord, board)
-			})(matches)
-
-			matches = mapMatched(func(matchedWord MatchedWord) MatchedWord {
-				matchedWord.points = countPointsHelper(&matchedWord, board)
-				fmt.Println(matchedWord.points, matchedWord.word)
-				return matchedWord
-			})(matches)
-
-			for i := 0; i < len(matches); i++ {
-				result = append(result, matches[i])
-			}
-		}
-	}
-
-	return result
 }
 
 func setColumnWordInBoard(columnWord *MatchedWord, board *Board) {
@@ -162,37 +177,22 @@ func removeColumnWordFromBoard(columnWord *MatchedWord, board *Board) {
 	}
 }
 
-func countColumnPointsHelper(columnWord *MatchedWord, board *Board) int {
-	setColumnWordInBoard(columnWord, board)
+func (columnSolver ColumnSolver) countColumnPointsHelper(columnWord *MatchedWord) int {
+	setColumnWordInBoard(columnWord, &columnSolver.board)
 
-	points := countPoints(board)
+	points := countPoints(&columnSolver.board)
 
-	removeColumnWordFromBoard(columnWord, board)
+	removeColumnWordFromBoard(columnWord, &columnSolver.board)
 
 	return points
 }
 
-func wordIsValidInBoard(columnWord *MatchedWord, board *Board) bool {
-	setColumnWordInBoard(columnWord, board)
+func (columnSolver ColumnSolver) wordIsValidInBoard(columnWord *MatchedWord) bool {
+	setColumnWordInBoard(columnWord, &columnSolver.board)
 
-	isValid := board.isValid()
+	isValid := columnSolver.board.isValid()
 
-	removeColumnWordFromBoard(columnWord, board)
+	removeColumnWordFromBoard(columnWord, &columnSolver.board)
 
 	return isValid
-}
-
-func solveColumns(board *Board, chars string) []MatchedWord {
-	list := []MatchedWord{}
-
-	for column := 0; column < boardLength; column++ {
-
-		matcheds := solveColumn(chars, board, column)
-
-		for i := 0; i < len(matcheds); i++ {
-			list = append(list, matcheds[i])
-		}
-	}
-
-	return list
 }
