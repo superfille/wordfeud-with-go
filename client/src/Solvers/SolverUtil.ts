@@ -56,10 +56,12 @@ const sequenceMatch = (libraryWord: string, constructedWord: string): boolean =>
 
 const getStartOfMatchingSequence = (libraryWord: string, constructedWord: string): number => {
   let index = 0;
+  debugger
   while (index < constructedWord.length) {
     if (sequenceMatch(libraryWord, constructedWord.slice(index))) {
       return index;
     }
+    
     index++;
   }
 
