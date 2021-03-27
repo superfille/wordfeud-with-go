@@ -91,7 +91,7 @@ const getVerticalWord = (row: number, column: number, board: Array<Array<Tile>>)
 }
 
 const canGoLeft = (row: number, column: number, board: Array<Array<Tile>>) => {
-  return column - 1 > 0 && board[row][column - 1].char !== '';
+  return column - 1 >= 0 && board[row][column - 1].char !== '';
 }
 
 const canGoRight = (row: number, column: number, board: Array<Array<Tile>>) => {
@@ -99,7 +99,7 @@ const canGoRight = (row: number, column: number, board: Array<Array<Tile>>) => {
 }
 
 const canGoUp = (row: number, column: number, board: Array<Array<Tile>>) => {
-  return row - 1 > 0 && board[row - 1][column].char !== '';
+  return row - 1 >= 0 && board[row - 1][column].char !== '';
 }
 
 const canGoDown = (row: number, column: number, board: Array<Array<Tile>>) => {
