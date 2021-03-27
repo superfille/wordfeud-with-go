@@ -28,8 +28,11 @@ func init() {
 	}
 	words := columnSolver.solveColumns("asdfeg")
 	words2 := rowSolver.solveRows("asdfeg")
-	fmt.Println("words", words)
-	fmt.Println("words2", words2)
+	allWords := append(words, words2...)
+	sortByPoints(allWords)
+	allWords = allWords[0:10]
+	fmt.Println("allWords", allWords)
+
 	// bol := isWordFine("filip", "*ilip", "okfoe")
 
 	// fmt.Println(bol)
