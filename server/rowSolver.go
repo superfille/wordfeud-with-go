@@ -1,6 +1,8 @@
 package main
 
-import "strings"
+import (
+	"strings"
+)
 
 type RowSolver struct {
 	board Board
@@ -31,8 +33,8 @@ func (rowSolver *RowSolver) solveRow(playerChars string, row int) []MatchedWord 
 		}
 
 		constructedWord := getConstructedRow(&rowSolver.board, len(playerChars), row, column)
-
 		if constructedWord != "" {
+
 			cMatch := WordMatch{
 				constructedWord: constructedWord,
 				playerChars:     playerChars,
@@ -49,7 +51,7 @@ func (rowSolver *RowSolver) solveRow(playerChars string, row int) []MatchedWord 
 			})(matches)
 
 			matches = mapMatched(func(matchedWord MatchedWord) MatchedWord {
-				matchedWord.points = rowSolver.countRowPointsHelper(&matchedWord)
+				matchedWord.points = rowSolver.countPoints(&matchedWord)
 				return matchedWord
 			})(matches)
 
@@ -107,10 +109,10 @@ func getConstructedRow(board *Board, playerLength int, row int, startColumn int)
 	return ""
 }
 
-func (rowSolver *RowSolver) countRowPointsHelper(rowWord *MatchedWord) int {
+func (rowSolver *RowSolver) countPoints(rowWord *MatchedWord) int {
 	setRowWordInBoard(rowWord, &rowSolver.board)
 
-	points := countPoints(&rowSolver.board)
+	points := countAllPoints(&rowSolver.board)
 
 	removeRowWordFromBoard(rowWord, &rowSolver.board)
 
@@ -134,11 +136,11 @@ func removeRowWordFromBoard(rowWord *MatchedWord, board *Board) {
 }
 
 func (rowSolver *RowSolver) wordIsValidInBoard(rowWord *MatchedWord) bool {
-	setColumnWordInBoard(rowWord, &rowSolver.board)
+	setRowWordInBoard(rowWord, &rowSolver.board)
 
 	isValid := rowSolver.board.isValid()
 
-	removeColumnWordFromBoard(rowWord, &rowSolver.board)
+	removeRowWordFromBoard(rowWord, &rowSolver.board)
 
 	return isValid
 }

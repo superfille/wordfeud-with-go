@@ -71,7 +71,7 @@ export default class App extends React.Component<Props, State> {
 
   deleteBoard(name: string) {
     BoardActions.deleteBoard(name);
-    
+
     const localStorageBoards = BoardActions.readLocalStorageBoards();
     if (localStorageBoards.length === 0) {
       BoardActions.save('board1', StartBoard);
@@ -96,7 +96,7 @@ export default class App extends React.Component<Props, State> {
     }
   }
 
-  setMultipleTiles(newTiles: Array<NewTile>, func = () => {}) {
+  setMultipleTiles(newTiles: Array<NewTile>, func = () => { }) {
     this.setState({
       board: BoardActions.setNewTilesToBoard(newTiles, this.state.board)
     }, func)
@@ -125,7 +125,7 @@ export default class App extends React.Component<Props, State> {
     });
   }
 
-  cleanBoard(func = () => {}) {
+  cleanBoard(func = () => { }) {
     this.setState({
       board: BoardActions.cleanBoard(this.state.board)
     }, func)
@@ -193,12 +193,12 @@ export default class App extends React.Component<Props, State> {
     }, () => {
       setTimeout(() => {
         const result = [
-          ...solveColumns(this.state.board, this.state.playerChars), 
+          // ...solveColumns(this.state.board, this.state.playerChars), 
           ...solveRows(this.state.board, this.state.playerChars)
         ]
-        
+
         this.setState({
-          matchedWords: sortByPoints(result).slice(0,100),
+          matchedWords: sortByPoints(result).slice(0, 100),
           loading: false
         });
       }, 0)
@@ -215,7 +215,7 @@ export default class App extends React.Component<Props, State> {
     workerInstance.addEventListener('message', (response: any) => {
       if (Array.isArray(response.data)) {
         this.setState({
-          matchedWords: sortByPoints(response.data).slice(0,100),
+          matchedWords: sortByPoints(response.data).slice(0, 100),
           loading: false
         });
       }
@@ -241,7 +241,7 @@ export default class App extends React.Component<Props, State> {
     });
     BoardActions.save(name, StartBoard);
   }
-        
+
   useWord() {
     const board = BoardActions.setAllToFinal(this.state.board);
     this.setState({
@@ -259,12 +259,12 @@ export default class App extends React.Component<Props, State> {
       <div className="container m-3">
         <div className="mb-2">
           <BoardReadSave
-            board={ this.state.board }
-            localStorageBoards={ this.state.localStorageBoards }
-            currentBoardName={ this.state.currentBoardName }
-            createNewBoard={ (name: string) => this.createNewBoard(name) }
-            setCurrentBoard= { (name: string) => this.setCurrentBoard(name) }
-            deleteBoard={ (name: string) => this.deleteBoard(name) }
+            board={this.state.board}
+            localStorageBoards={this.state.localStorageBoards}
+            currentBoardName={this.state.currentBoardName}
+            createNewBoard={(name: string) => this.createNewBoard(name)}
+            setCurrentBoard={(name: string) => this.setCurrentBoard(name)}
+            deleteBoard={(name: string) => this.deleteBoard(name)}
           />
         </div>
         <hr />
@@ -272,26 +272,26 @@ export default class App extends React.Component<Props, State> {
           <section className="column">
             <div className="mb-3">
               <Board
-                board={ this.state.board }
-                setTile={ (tile: Tile | null, char: string) => this.setTile(tile, char) }
+                board={this.state.board}
+                setTile={(tile: Tile | null, char: string) => this.setTile(tile, char)}
               />
             </div>
 
             <div>
               <PlayerTiles
-                tiles={ this.state.playerChars }
-                isLoading={ this.state.loading }
-                setPlayerChars={ (chars: string) => this.setPlayerChars(chars) }
+                tiles={this.state.playerChars}
+                isLoading={this.state.loading}
+                setPlayerChars={(chars: string) => this.setPlayerChars(chars)}
               />
             </div>
           </section>
 
           <section className="column">
             <WordTable
-              matchedWords={ this.state.matchedWords }
-              displayWord={ (matchedWord: MatchedWord | null) => this.displayWord(matchedWord) }
-              hideWord={ (matchedWord: MatchedWord) => this.hideWord(matchedWord) }
-              useWord={ () => this.useWord() }
+              matchedWords={this.state.matchedWords}
+              displayWord={(matchedWord: MatchedWord | null) => this.displayWord(matchedWord)}
+              hideWord={(matchedWord: MatchedWord) => this.hideWord(matchedWord)}
+              useWord={() => this.useWord()}
             />
           </section>
         </div>

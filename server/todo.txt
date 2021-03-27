@@ -1,1 +1,4 @@
 https://superfille.github.io/wordfeud-helper/
+
+RowSolver och antagligen ColumnSolver fungerar inte
+Testa lokalt med bara A och playerChars PA. Får inte samma resultat

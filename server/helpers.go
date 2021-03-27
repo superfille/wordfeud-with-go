@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"sort"
 	"strings"
 )
@@ -36,7 +35,7 @@ func getMissingCharacters(libraryWord string, constructedWord string, startInCon
 
 	for i := 0; i < len(constructedWordSplitted); i++ {
 		if constructedWordSplitted[i] == "*" {
-			if i <= len(libraryWord) {
+			if i < len(libraryWord) {
 				missingChars += string(libraryWord[i])
 			}
 		}
@@ -74,7 +73,6 @@ func getStartOfMatchingSequence(libraryWord string, constructedWord string) int 
 
 	for index := -1; index < len(constructedWord); index++ {
 		if index >= 0 {
-			fmt.Println(constructedWordSplitted)
 			constructedWordSplitted = removeIndex(constructedWordSplitted, 0)
 		}
 
@@ -124,9 +122,12 @@ func sequenceMatch(libraryWord string, constructedWord string) bool {
 	return false
 }
 
-func countPointsHelper(matchedWord *MatchedWord, board *Board) int {
-	return 2
-}
+// func countPoints() int {
+//   const column = columnS countColumnPoints(board)
+//   const row = countRowPoints(board)
+
+//   return column + row
+// }
 
 func sortByPoints(matchedWords []MatchedWord) {
 	sort.SliceStable(matchedWords, func(i, j int) bool {

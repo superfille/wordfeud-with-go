@@ -1,7 +1,7 @@
 import { MatchedWord, Tile } from "../Models/Tile";
 import { countWordPoint, countCharPoint } from './CountPoints';
 
-const specials = (currentPoints: number, rowWord: MatchedWord, board: Array<Array<Tile>>) => {
+const specialsColumn = (currentPoints: number, rowWord: MatchedWord, board: Array<Array<Tile>>) => {
   let points = currentPoints;
   for (let i = 0; i < rowWord.word.length; i++) {
     points = countWordPoint(currentPoints, board[rowWord.row][rowWord.column + i])
@@ -16,7 +16,7 @@ const rowPoints = (rowWord: MatchedWord, board: Array<Array<Tile>>): number => {
     points += countCharPoint(board[rowWord.row][rowWord.column + i], rowWord.word[i]);
   }
 
-  return specials(points, rowWord, board);
+  return specialsColumn(points, rowWord, board);
 }
 
 const findRowWords = (board: Array<Array<Tile>>): Array<MatchedWord> => {

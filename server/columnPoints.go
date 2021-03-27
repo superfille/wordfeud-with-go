@@ -1,10 +1,11 @@
 package main
 
-import "fmt"
-
 func specials(currentPoints int, matchedWord MatchedWord, board *Board) int {
 	points := currentPoints
 	for i := 0; i < len(matchedWord.word); i++ {
+		if matchedWord.row+i >= 15 {
+			break
+		}
 		points = countWordPoint(currentPoints, board.tiles[matchedWord.row+i][matchedWord.column])
 	}
 
@@ -14,6 +15,9 @@ func specials(currentPoints int, matchedWord MatchedWord, board *Board) int {
 func columnPoints(matchedWord MatchedWord, board *Board) int {
 	points := 0
 	for i := 0; i < len(matchedWord.word); i++ {
+		if matchedWord.row+i >= 15 {
+			break
+		}
 		points += countCharPoint(board.tiles[matchedWord.row+i][matchedWord.column], string(matchedWord.word[i]))
 	}
 
@@ -71,7 +75,6 @@ func findColumnWords(board *Board) []MatchedWord {
 
 func countColumnPoints(board *Board) int {
 	wordsFound := findColumnWords(board)
-	fmt.Println(wordsFound)
 	points := 0
 
 	for i := 0; i < len(wordsFound); i++ {

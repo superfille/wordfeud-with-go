@@ -29,9 +29,7 @@ func (solver *ColumnSolver) solveColumns(chars string) []MatchedWord {
 	list := []MatchedWord{}
 
 	for column := 0; column < boardLength; column++ {
-
 		matcheds := solver.solveColumn(chars, column)
-
 		for i := 0; i < len(matcheds); i++ {
 			list = append(list, matcheds[i])
 		}
@@ -50,7 +48,6 @@ func (solver *ColumnSolver) solveColumn(playerChars string, column int) []Matche
 		}
 
 		constructedWord := getConstructedColumn(&solver.board, len(playerChars), row, column)
-
 		if constructedWord != "" {
 			cMatch := WordMatch{
 				constructedWord: constructedWord,
@@ -68,7 +65,7 @@ func (solver *ColumnSolver) solveColumn(playerChars string, column int) []Matche
 			})(matches)
 
 			matches = mapMatched(func(matchedWord MatchedWord) MatchedWord {
-				matchedWord.points = solver.countColumnPointsHelper(&matchedWord)
+				matchedWord.points = solver.countPoints(&matchedWord)
 				return matchedWord
 			})(matches)
 
@@ -146,8 +143,8 @@ func wordsThatMatchPositions(payload *WordMatch, direction string) []MatchedWord
 			if !positionAfterCurrentWordIsEmpty(libraryWord, payload) {
 				return accumulated
 			}
-
-			if isWordFine(libraryWord, payload.constructedWord, payload.playerChars) {
+			result := isWordFine(libraryWord, payload.constructedWord, payload.playerChars)
+			if result {
 				return append(accumulated, MatchedWord{
 					word:      libraryWord,
 					direction: direction,
@@ -177,10 +174,10 @@ func removeColumnWordFromBoard(columnWord *MatchedWord, board *Board) {
 	}
 }
 
-func (columnSolver ColumnSolver) countColumnPointsHelper(columnWord *MatchedWord) int {
+func (columnSolver ColumnSolver) countPoints(columnWord *MatchedWord) int {
 	setColumnWordInBoard(columnWord, &columnSolver.board)
 
-	points := countPoints(&columnSolver.board)
+	points := countAllPoints(&columnSolver.board)
 
 	removeColumnWordFromBoard(columnWord, &columnSolver.board)
 

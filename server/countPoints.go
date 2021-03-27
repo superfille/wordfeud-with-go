@@ -35,7 +35,6 @@ func countCharPoint(tile Tile, char string) int {
 			return getCharPoint(char) * 3
 		}
 	}
-
 	return getCharPoint(char)
 }
 
@@ -55,10 +54,9 @@ func countWordPoint(currentPoints int, tile Tile) int {
 	return currentPoints
 }
 
-func countPoints(board *Board) int {
+func countAllPoints(board *Board) int {
 	column := countColumnPoints(board)
-	// row := countRowPoints(board)
+	row := countRowPoints(board)
 
-	// return column + row
-	return column
+	return column + row
 }
