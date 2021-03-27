@@ -238,3 +238,64 @@ func (board *Board) printBoard() {
 		fmt.Println(columns)
 	}
 }
+
+func (board *Board) printWithMatchedWord(matchedWord *MatchedWord) {
+	if matchedWord.direction == "column" {
+		setColumnWordInBoard(matchedWord, board)
+		board.printBoard()
+		removeColumnWordFromBoard(matchedWord, board)
+	} else {
+		setRowWordInBoard(matchedWord, board)
+		board.printBoard()
+		removeRowWordFromBoard(matchedWord, board)
+	}
+}
+
+func (board *Board) printWithSpecials() {
+	for row := 0; row < boardLength; row++ {
+		columns := strconv.Itoa(row + 1)
+		if row < 9 {
+			columns += "  | "
+		} else {
+			columns += " | "
+		}
+		if row == 0 {
+			columnIndexes := "     "
+			for i := 0; i < boardLength; i++ {
+				if i < 9 {
+					if i == 8 {
+						columnIndexes += strconv.Itoa(i+1) + "  "
+					} else {
+						columnIndexes += strconv.Itoa(i+1) + "   "
+					}
+				} else {
+					columnIndexes += strconv.Itoa(i+1) + "  "
+				}
+			}
+			fmt.Println(columnIndexes)
+		}
+		for column := 0; column < boardLength; column++ {
+			columns += getSpecial(board.tiles[row][column].s) + " | "
+		}
+		fmt.Println(columns)
+	}
+}
+
+func getSpecial(special string) string {
+	if special == "tw" {
+		return "T"
+	}
+
+	if special == "tl" {
+		return "t"
+	}
+
+	if special == "dl" {
+		return "d"
+	}
+
+	if special == "dw" {
+		return "D"
+	}
+	return "X"
+}
