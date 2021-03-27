@@ -10,8 +10,8 @@ type Library struct {
 	words []string //
 }
 
-func (library *Library) openLibrary() {
-	content, err := ioutil.ReadFile("./english.json")
+func (library *Library) openLibrary(path string) {
+	content, err := ioutil.ReadFile("./" + path + ".json")
 
 	if err != nil {
 		log.Fatal("Error when opening file: ", err)
