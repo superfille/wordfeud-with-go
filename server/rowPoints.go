@@ -23,7 +23,7 @@ func rowPoints(matchedWord MatchedWord, board *Board) int {
 		points += countCharPoint(board.tiles[matchedWord.row][matchedWord.column+i], string(matchedWord.word[i]))
 	}
 
-	return specials(points, matchedWord, board)
+	return specialsRow(points, matchedWord, board)
 }
 
 func findRowWords(board *Board) []MatchedWord {

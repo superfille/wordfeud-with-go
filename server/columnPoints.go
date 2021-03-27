@@ -1,6 +1,6 @@
 package main
 
-func specials(currentPoints int, matchedWord MatchedWord, board *Board) int {
+func specialsColumn(currentPoints int, matchedWord MatchedWord, board *Board) int {
 	points := currentPoints
 	for i := 0; i < len(matchedWord.word); i++ {
 		if matchedWord.row+i >= 15 {
@@ -21,7 +21,7 @@ func columnPoints(matchedWord MatchedWord, board *Board) int {
 		points += countCharPoint(board.tiles[matchedWord.row+i][matchedWord.column], string(matchedWord.word[i]))
 	}
 
-	return specials(points, matchedWord, board)
+	return specialsColumn(points, matchedWord, board)
 }
 
 func findColumnWords(board *Board) []MatchedWord {
