@@ -10,7 +10,7 @@ type Solver struct {
 	playerChars string
 }
 
-type MatchedWordv2 struct {
+type MatchedWord struct {
 	word                 string
 	points               int
 	hasNotFinalCharacter bool
@@ -18,15 +18,16 @@ type MatchedWordv2 struct {
 	column               int
 }
 
-type WordMatchv2 struct {
+type WordMatch struct {
 	constructedWord string // Could be *be*apa  [][b][e][][a][p][a];
 	row             int
 	column          int
 }
 
-func (solver *Solver) solve(chars string, direction string) []MatchedWordv2 {
-	list := []MatchedWordv2{}
+func (solver *Solver) solve(chars string, direction string) []MatchedWord {
+	list := []MatchedWord{}
 	solver.direction = direction
+	solver.playerChars = chars
 
 	if solver.direction == "column" {
 		for column := 0; column < boardLength; column++ {
@@ -45,8 +46,8 @@ func (solver *Solver) solve(chars string, direction string) []MatchedWordv2 {
 	return list
 }
 
-func (solver *Solver) solveMe(row int, column int) []MatchedWordv2 {
-	result := []MatchedWordv2{}
+func (solver *Solver) solveMe(row int, column int) []MatchedWord {
+	result := []MatchedWord{}
 
 	if solver.isTileBeforePopulated(row, column) {
 		return result
@@ -54,7 +55,7 @@ func (solver *Solver) solveMe(row int, column int) []MatchedWordv2 {
 
 	constructedWord := solver.getConstructed(row, column)
 	if constructedWord != "" {
-		match := WordMatchv2{
+		match := WordMatch{
 			constructedWord: constructedWord,
 			row:             row,
 			column:          column,
@@ -63,7 +64,7 @@ func (solver *Solver) solveMe(row int, column int) []MatchedWordv2 {
 		matches := solver.wordsThatMatchPositions(&match)
 
 		for index := 0; index < len(matches); index++ {
-			points := solver.board.getPointsv2(&matches[index], solver.direction)
+			points := solver.board.getPoints(&matches[index], solver.direction)
 			if points > 0 {
 				matches[index].points = points
 				result = append(result, matches[index])
@@ -94,7 +95,7 @@ func (solver Solver) getConstructed(row int, column int) string {
 		return column+1 < boardLength && solver.board.hasChar(row, column+1)
 	}
 
-	for row < boardLength {
+	for row < boardLength && column < boardLength {
 		if solver.board.hasChar(row, column) {
 			constructedWord += solver.board.tiles[row][column].c
 			increase()
@@ -131,8 +132,8 @@ func (solver Solver) getConstructed(row int, column int) string {
 	return ""
 }
 
-func (solver Solver) wordsThatMatchPositions(payload *WordMatchv2) []MatchedWordv2 {
-	result := []MatchedWordv2{}
+func (solver Solver) wordsThatMatchPositions(payload *WordMatch) []MatchedWord {
+	result := []MatchedWord{}
 
 	for index := 0; index < len(library.words); index++ {
 		word := library.words[index]
@@ -141,7 +142,7 @@ func (solver Solver) wordsThatMatchPositions(payload *WordMatchv2) []MatchedWord
 		}
 
 		if isWordFine(word, payload.constructedWord, solver.playerChars) {
-			result = append(result, MatchedWordv2{
+			result = append(result, MatchedWord{
 				word:                 word,
 				hasNotFinalCharacter: false,
 				row:                  payload.row,
@@ -161,7 +162,7 @@ func (solver *Solver) isTileBeforePopulated(row int, column int) bool {
 	return column > 0 && solver.board.hasChar(row, column-1)
 }
 
-func (solver *Solver) isTileAfterPopulated(word string, wordMatch *WordMatchv2) bool {
+func (solver *Solver) isTileAfterPopulated(word string, wordMatch *WordMatch) bool {
 	if solver.direction == "column" {
 		if wordMatch.row+len(word) < boardLength {
 			return solver.board.hasChar(wordMatch.row+len(word), wordMatch.column)

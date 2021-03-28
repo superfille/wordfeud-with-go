@@ -236,10 +236,10 @@ func (board *Board) printBoard() {
 	}
 }
 
-func (board *Board) printWithMatchedWord(matchedWord *MatchedWord) {
-	board.addMatchedWord(matchedWord)
+func (board *Board) printWithMatchedWord(matchedWord *MatchedWord, direction string) {
+	board.addMatchedWord(matchedWord, direction)
 	board.printBoard()
-	board.removeMatchedWord(matchedWord)
+	board.removeMatchedWord(matchedWord, direction)
 }
 
 func (board *Board) printWithSpecials() {
@@ -289,69 +289,24 @@ func getSpecial(special string) string {
 	return "X"
 }
 
-func (board *Board) addMatchedWord(matchedWord *MatchedWord) {
-	if matchedWord.direction == "row" {
-		for i := 0; i < len(matchedWord.word); i++ {
-			if board.tiles[matchedWord.row][matchedWord.column+i].fixed == false {
-				board.tiles[matchedWord.row][matchedWord.column+i].c = string(matchedWord.word[i])
-			}
-		}
-	} else {
-		for i := 0; i < len(matchedWord.word); i++ {
-			if board.tiles[matchedWord.row+i][matchedWord.column].fixed == false {
-				board.tiles[matchedWord.row+i][matchedWord.column].c = string(matchedWord.word[i])
-			}
-		}
-	}
-}
-
-func (board *Board) removeMatchedWord(matchedWord *MatchedWord) {
-	if matchedWord.direction == "row" {
-		for i := 0; i < len(matchedWord.word); i++ {
-			if board.tiles[matchedWord.row][matchedWord.column+i].fixed == false {
-				board.tiles[matchedWord.row][matchedWord.column+i].c = ""
-			}
-		}
-	} else {
-		for i := 0; i < len(matchedWord.word); i++ {
-			if board.tiles[matchedWord.row+i][matchedWord.column].fixed == false {
-				board.tiles[matchedWord.row+i][matchedWord.column].c = ""
-			}
-		}
-	}
-}
-
-func (board *Board) getPoints(matchedWord *MatchedWord) int {
-	board.addMatchedWord(matchedWord)
-	points := -1
-
-	if board.isValid() {
-		points = countAllPoints(board)
-	}
-
-	board.removeMatchedWord(matchedWord)
-
-	return points
-}
-
 func (board *Board) hasChar(row int, column int) bool {
 	return board.tiles[row][column].c != ""
 }
 
-func (board *Board) getPointsv2(matchedWord *MatchedWordv2, direction string) int {
-	board.addMatchedWordv2(matchedWord, direction)
+func (board *Board) getPoints(matchedWord *MatchedWord, direction string) int {
+	board.addMatchedWord(matchedWord, direction)
 	points := -1
 
 	if board.isValid() {
 		points = countAllPoints(board)
 	}
 
-	board.removeMatchedWordv2(matchedWord, direction)
+	board.removeMatchedWord(matchedWord, direction)
 
 	return points
 }
 
-func (board *Board) addMatchedWordv2(matchedWord *MatchedWordv2, direction string) {
+func (board *Board) addMatchedWord(matchedWord *MatchedWord, direction string) {
 	if direction == "row" {
 		for i := 0; i < len(matchedWord.word); i++ {
 			if board.tiles[matchedWord.row][matchedWord.column+i].fixed == false {
@@ -367,7 +322,7 @@ func (board *Board) addMatchedWordv2(matchedWord *MatchedWordv2, direction strin
 	}
 }
 
-func (board *Board) removeMatchedWordv2(matchedWord *MatchedWordv2, direction string) {
+func (board *Board) removeMatchedWord(matchedWord *MatchedWord, direction string) {
 	if direction == "row" {
 		for i := 0; i < len(matchedWord.word); i++ {
 			if board.tiles[matchedWord.row][matchedWord.column+i].fixed == false {

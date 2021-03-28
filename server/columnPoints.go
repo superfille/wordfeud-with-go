@@ -32,7 +32,6 @@ func findColumnWords(board *Board) []MatchedWord {
 			{
 				word:                 "",
 				points:               0,
-				direction:            "column",
 				column:               column,
 				row:                  -1,
 				hasNotFinalCharacter: false,
@@ -45,7 +44,6 @@ func findColumnWords(board *Board) []MatchedWord {
 					matchedWords = append(matchedWords, MatchedWord{
 						word:                 "",
 						points:               0,
-						direction:            "column",
 						column:               column,
 						row:                  -1,
 						hasNotFinalCharacter: false,

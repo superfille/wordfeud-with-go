@@ -34,7 +34,6 @@ func findRowWords(board *Board) []MatchedWord {
 			{
 				word:                 "",
 				points:               0,
-				direction:            "row",
 				column:               -1,
 				row:                  row,
 				hasNotFinalCharacter: false,
@@ -47,7 +46,6 @@ func findRowWords(board *Board) []MatchedWord {
 					matchedWords = append(matchedWords, MatchedWord{
 						word:                 "",
 						points:               0,
-						direction:            "row",
 						column:               -1,
 						row:                  row,
 						hasNotFinalCharacter: false,
