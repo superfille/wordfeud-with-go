@@ -122,13 +122,6 @@ func sequenceMatch(libraryWord string, constructedWord string) bool {
 	return false
 }
 
-// func countPoints() int {
-//   const column = columnS countColumnPoints(board)
-//   const row = countRowPoints(board)
-
-//   return column + row
-// }
-
 func sortByPoints(matchedWords []MatchedWord) {
 	sort.SliceStable(matchedWords, func(i, j int) bool {
 		return matchedWords[i].points > matchedWords[j].points

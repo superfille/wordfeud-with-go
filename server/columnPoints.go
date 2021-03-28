@@ -3,7 +3,7 @@ package main
 func specialsColumn(currentPoints int, matchedWord MatchedWord, board *Board) int {
 	points := currentPoints
 	for i := 0; i < len(matchedWord.word); i++ {
-		if matchedWord.row+i >= 15 {
+		if matchedWord.row+i >= boardLength {
 			break
 		}
 		points = countWordPoint(currentPoints, board.tiles[matchedWord.row+i][matchedWord.column])
@@ -15,7 +15,7 @@ func specialsColumn(currentPoints int, matchedWord MatchedWord, board *Board) in
 func columnPoints(matchedWord MatchedWord, board *Board) int {
 	points := 0
 	for i := 0; i < len(matchedWord.word); i++ {
-		if matchedWord.row+i >= 15 {
+		if matchedWord.row+i >= boardLength {
 			break
 		}
 		points += countCharPoint(board.tiles[matchedWord.row+i][matchedWord.column], string(matchedWord.word[i]))
