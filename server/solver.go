@@ -121,14 +121,20 @@ func (solver Solver) getConstructed(row int, column int) string {
 	}
 
 	splitted := strings.Split(constructedWord, "")
-	noStar := someString(splitted, func(c1 string) bool { return c1 != "*" })
-	if noStar {
-		hasStar := someString(splitted, func(c1 string) bool { return c1 == "*" })
-		if hasStar {
-			return constructedWord
+	noStar := false
+	hasStar := false
+
+	for _, value := range splitted {
+		if value != "*" {
+			noStar = true
+		} else {
+			hasStar = true
 		}
 	}
 
+	if hasStar && noStar {
+		return constructedWord // Return of its not just stars and not just no stars
+	}
 	return ""
 }
 
