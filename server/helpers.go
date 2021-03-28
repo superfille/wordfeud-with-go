@@ -129,7 +129,7 @@ func sequenceMatch(libraryWord string, constructedWord string) bool {
 //   return column + row
 // }
 
-func sortByPoints(matchedWords []MatchedWord) {
+func sortByPoints(matchedWords []MatchedWordv2) {
 	sort.SliceStable(matchedWords, func(i, j int) bool {
 		return matchedWords[i].points > matchedWords[j].points
 	})

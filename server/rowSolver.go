@@ -12,9 +12,7 @@ func (solver *RowSolver) solveRows(chars string) []MatchedWord {
 	list := []MatchedWord{}
 
 	for row := 0; row < boardLength; row++ {
-
 		matcheds := solver.solveRow(chars, row)
-
 		for i := 0; i < len(matcheds); i++ {
 			list = append(list, matcheds[i])
 		}
@@ -32,9 +30,8 @@ func (solver *RowSolver) solveRow(playerChars string, row int) []MatchedWord {
 			continue
 		}
 
-		constructedWord := getConstructedRow(&solver.board, len(playerChars), row, column)
+		constructedWord := solver.getConstructedRow(len(playerChars), row, column)
 		if constructedWord != "" {
-
 			cMatch := WordMatch{
 				constructedWord: constructedWord,
 				playerChars:     playerChars,
@@ -58,15 +55,15 @@ func (solver *RowSolver) solveRow(playerChars string, row int) []MatchedWord {
 	return result
 }
 
-func getConstructedRow(board *Board, playerLength int, row int, startColumn int) string {
+func (solver RowSolver) getConstructedRow(playerLength int, row int, startColumn int) string {
 	charsUsed := 0
 	column := startColumn
 	index := 0
 	constructedWord := ""
 
 	for column < boardLength {
-		if hasChar(board, row, column) {
-			constructedWord += board.tiles[row][column].c
+		if hasChar(&solver.board, row, column) {
+			constructedWord += solver.board.tiles[row][column].c
 			index++
 			column++
 			continue
@@ -79,7 +76,7 @@ func getConstructedRow(board *Board, playerLength int, row int, startColumn int)
 		charsUsed++
 
 		// The next tile is not the end of the board and is not empty, we can continue
-		if column+1 < boardLength && hasChar(board, row, column+1) {
+		if column+1 < boardLength && hasChar(&solver.board, row, column+1) {
 			index++
 			column++
 			continue
@@ -94,10 +91,11 @@ func getConstructedRow(board *Board, playerLength int, row int, startColumn int)
 
 	splitted := strings.Split(constructedWord, "")
 	noStar := someString(splitted, func(c1 string) bool { return c1 != "*" })
-	hasStar := someString(splitted, func(c1 string) bool { return c1 == "*" })
-
-	if noStar && hasStar {
-		return constructedWord
+	if noStar {
+		hasStar := someString(splitted, func(c1 string) bool { return c1 == "*" })
+		if hasStar {
+			return constructedWord
+		}
 	}
 
 	return ""

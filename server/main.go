@@ -7,6 +7,7 @@ var library Library
 var mainBoard Board
 var columnSolver ColumnSolver
 var rowSolver RowSolver
+var solver Solver
 
 // var rowSolver RowSolver
 
@@ -26,16 +27,21 @@ func init() {
 	rowSolver = RowSolver{
 		board: mainBoard,
 	}
+	solver := Solver{
+		board: &mainBoard,
+	}
 
-	words := columnSolver.solveColumns("asdfeg")
-	words2 := rowSolver.solveRows("asdfeg")
+	// words := columnSolver.solveColumns("asdfeg")
+	// words2 := rowSolver.solveRows("asdfeg")
+	words := solver.solve("asdfeg", "column")
+	words2 := solver.solve("asdfeg", "row")
 	allWords := append(words, words2...)
+	fmt.Println("allWords", allWords)
 
 	sortByPoints(allWords)
 	if len(allWords) > 10 {
 		allWords = allWords[0:10]
 	}
-	fmt.Println("allWords", allWords)
 
 	// mainBoard.printWithMatchedWord(&allWords[0])
 	// bol := isWordFine("filip", "*ilip", "okfoe")

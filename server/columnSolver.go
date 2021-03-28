@@ -72,15 +72,15 @@ func (solver *ColumnSolver) solveColumn(playerChars string, column int) []Matche
 	return result
 }
 
-func (columnSolver ColumnSolver) getConstructed(playerLength int, startRow int, column int) string {
+func (solver ColumnSolver) getConstructed(playerLength int, startRow int, column int) string {
 	charsUsed := 0
 	row := startRow
 	index := 0
 	constructedWord := ""
 
 	for row < boardLength {
-		if hasChar(&columnSolver.board, row, column) {
-			constructedWord += columnSolver.board.tiles[row][column].c
+		if hasChar(&solver.board, row, column) {
+			constructedWord += solver.board.tiles[row][column].c
 			index++
 			row++
 			continue
@@ -93,7 +93,7 @@ func (columnSolver ColumnSolver) getConstructed(playerLength int, startRow int, 
 		charsUsed++
 
 		// The next tile is not the end of the board and is not empty, we can continue
-		if row+1 < boardLength && hasChar(&columnSolver.board, row+1, column) {
+		if row+1 < boardLength && hasChar(&solver.board, row+1, column) {
 			index++
 			row++
 			continue
