@@ -320,3 +320,16 @@ func (board *Board) removeMatchedWord(matchedWord *MatchedWord) {
 		}
 	}
 }
+
+func (board *Board) getPoints(matchedWord *MatchedWord) int {
+	board.addMatchedWord(matchedWord)
+	points := -1
+
+	if board.isValid() {
+		points = countAllPoints(board)
+	}
+
+	board.removeMatchedWord(matchedWord)
+
+	return points
+}

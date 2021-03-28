@@ -60,7 +60,7 @@ func (solver *ColumnSolver) solveColumn(playerChars string, column int) []Matche
 			matches := wordsThatMatchPositions(&cMatch, "column")
 
 			for index := 0; index < len(matches); index++ {
-				points := solver.getPoints(&matches[index])
+				points := solver.board.getPoints(&matches[index])
 				if points > 0 {
 					matches[index].points = points
 					result = append(result, matches[index])
@@ -151,17 +151,4 @@ func wordsThatMatchPositions(payload *WordMatch, direction string) []MatchedWord
 
 			return accumulated
 		})
-}
-
-func (columnSolver ColumnSolver) getPoints(matchedWord *MatchedWord) int {
-	columnSolver.board.addMatchedWord(matchedWord)
-	points := -1
-
-	if columnSolver.board.isValid() {
-		points = countAllPoints(&columnSolver.board)
-	}
-
-	columnSolver.board.removeMatchedWord(matchedWord)
-
-	return points
 }

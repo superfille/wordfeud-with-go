@@ -23,40 +23,34 @@ func (solver *RowSolver) solveRows(chars string) []MatchedWord {
 	return list
 }
 
-func (rowSolver *RowSolver) solveRow(playerChars string, row int) []MatchedWord {
+func (solver *RowSolver) solveRow(playerChars string, row int) []MatchedWord {
 	result := []MatchedWord{}
 
 	for column := 0; column < boardLength; column++ {
-		if column > 0 && hasChar(&rowSolver.board, row, column-1) {
+		if column > 0 && hasChar(&solver.board, row, column-1) {
 			// We start words when there is nothing above
 			continue
 		}
 
-		constructedWord := getConstructedRow(&rowSolver.board, len(playerChars), row, column)
+		constructedWord := getConstructedRow(&solver.board, len(playerChars), row, column)
 		if constructedWord != "" {
 
 			cMatch := WordMatch{
 				constructedWord: constructedWord,
 				playerChars:     playerChars,
-				board:           &rowSolver.board,
+				board:           &solver.board,
 				row:             row,
 				column:          column,
 			}
 
 			matches := wordsThatMatchPositions(&cMatch, "row")
 
-			// result
-			matches = filterMatchedWords(func(matchedWord MatchedWord) bool {
-				return rowSolver.wordIsValidInBoard(&matchedWord)
-			})(matches)
-
-			matches = mapMatched(func(matchedWord MatchedWord) MatchedWord {
-				matchedWord.points = rowSolver.countPoints(&matchedWord)
-				return matchedWord
-			})(matches)
-
-			for i := 0; i < len(matches); i++ {
-				result = append(result, matches[i])
+			for index := 0; index < len(matches); index++ {
+				points := solver.board.getPoints(&matches[index])
+				if points > 0 {
+					matches[index].points = points
+					result = append(result, matches[index])
+				}
 			}
 		}
 	}
@@ -107,24 +101,4 @@ func getConstructedRow(board *Board, playerLength int, row int, startColumn int)
 	}
 
 	return ""
-}
-
-func (rowSolver *RowSolver) countPoints(rowWord *MatchedWord) int {
-	rowSolver.board.addMatchedWord(rowWord)
-
-	points := countAllPoints(&rowSolver.board)
-
-	rowSolver.board.removeMatchedWord(rowWord)
-
-	return points
-}
-
-func (rowSolver *RowSolver) wordIsValidInBoard(rowWord *MatchedWord) bool {
-	rowSolver.board.addMatchedWord(rowWord)
-
-	isValid := rowSolver.board.isValid()
-
-	rowSolver.board.removeMatchedWord(rowWord)
-
-	return isValid
 }
