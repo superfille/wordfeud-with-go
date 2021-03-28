@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -226,7 +225,6 @@ func (board *Board) printBoard() {
 					columnIndexes += strconv.Itoa(i+1) + "  "
 				}
 			}
-			fmt.Println(columnIndexes)
 		}
 		for column := 0; column < boardLength; column++ {
 			if board.tiles[row][column].c == "" {
@@ -235,7 +233,6 @@ func (board *Board) printBoard() {
 				columns += board.tiles[row][column].c + " | "
 			}
 		}
-		fmt.Println(columns)
 	}
 }
 
@@ -272,12 +269,10 @@ func (board *Board) printWithSpecials() {
 					columnIndexes += strconv.Itoa(i+1) + "  "
 				}
 			}
-			fmt.Println(columnIndexes)
 		}
 		for column := 0; column < boardLength; column++ {
 			columns += getSpecial(board.tiles[row][column].s) + " | "
 		}
-		fmt.Println(columns)
 	}
 }
 

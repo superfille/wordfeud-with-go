@@ -184,12 +184,12 @@ func (columnSolver ColumnSolver) countPoints(columnWord *MatchedWord) int {
 	return points
 }
 
-func (columnSolver ColumnSolver) wordIsValidInBoard(columnWord *MatchedWord) bool {
-	setColumnWordInBoard(columnWord, &columnSolver.board)
+func (columnSolver ColumnSolver) wordIsValidInBoard(matchedWord *MatchedWord) bool {
+	setColumnWordInBoard(matchedWord, &columnSolver.board)
 
 	isValid := columnSolver.board.isValid()
 
-	removeColumnWordFromBoard(columnWord, &columnSolver.board)
+	removeColumnWordFromBoard(matchedWord, &columnSolver.board)
 
 	return isValid
 }
