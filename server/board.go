@@ -237,15 +237,9 @@ func (board *Board) printBoard() {
 }
 
 func (board *Board) printWithMatchedWord(matchedWord *MatchedWord) {
-	if matchedWord.direction == "column" {
-		setColumnWordInBoard(matchedWord, board)
-		board.printBoard()
-		removeColumnWordFromBoard(matchedWord, board)
-	} else {
-		setRowWordInBoard(matchedWord, board)
-		board.printBoard()
-		removeRowWordFromBoard(matchedWord, board)
-	}
+	board.addMatchedWord(matchedWord)
+	board.printBoard()
+	board.removeMatchedWord(matchedWord)
 }
 
 func (board *Board) printWithSpecials() {
@@ -293,4 +287,36 @@ func getSpecial(special string) string {
 		return "D"
 	}
 	return "X"
+}
+
+func (board *Board) addMatchedWord(matchedWord *MatchedWord) {
+	if matchedWord.direction == "row" {
+		for i := 0; i < len(matchedWord.word); i++ {
+			if board.tiles[matchedWord.row][matchedWord.column+i].fixed == false {
+				board.tiles[matchedWord.row][matchedWord.column+i].c = string(matchedWord.word[i])
+			}
+		}
+	} else {
+		for i := 0; i < len(matchedWord.word); i++ {
+			if board.tiles[matchedWord.row+i][matchedWord.column].fixed == false {
+				board.tiles[matchedWord.row+i][matchedWord.column].c = string(matchedWord.word[i])
+			}
+		}
+	}
+}
+
+func (board *Board) removeMatchedWord(matchedWord *MatchedWord) {
+	if matchedWord.direction == "row" {
+		for i := 0; i < len(matchedWord.word); i++ {
+			if board.tiles[matchedWord.row][matchedWord.column+i].fixed == false {
+				board.tiles[matchedWord.row][matchedWord.column+i].c = ""
+			}
+		}
+	} else {
+		for i := 0; i < len(matchedWord.word); i++ {
+			if board.tiles[matchedWord.row+i][matchedWord.column].fixed == false {
+				board.tiles[matchedWord.row+i][matchedWord.column].c = ""
+			}
+		}
+	}
 }

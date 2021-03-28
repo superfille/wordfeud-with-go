@@ -110,37 +110,21 @@ func getConstructedRow(board *Board, playerLength int, row int, startColumn int)
 }
 
 func (rowSolver *RowSolver) countPoints(rowWord *MatchedWord) int {
-	setRowWordInBoard(rowWord, &rowSolver.board)
+	rowSolver.board.addMatchedWord(rowWord)
 
 	points := countAllPoints(&rowSolver.board)
 
-	removeRowWordFromBoard(rowWord, &rowSolver.board)
+	rowSolver.board.removeMatchedWord(rowWord)
 
 	return points
 }
 
-func setRowWordInBoard(rowWord *MatchedWord, board *Board) {
-	for i := 0; i < len(rowWord.word); i++ {
-		if board.tiles[rowWord.row][rowWord.column+i].fixed == false {
-			board.tiles[rowWord.row][rowWord.column+i].c = string(rowWord.word[i])
-		}
-	}
-}
-
-func removeRowWordFromBoard(rowWord *MatchedWord, board *Board) {
-	for i := 0; i < len(rowWord.word); i++ {
-		if board.tiles[rowWord.row][rowWord.column+i].fixed == false {
-			board.tiles[rowWord.row][rowWord.column+i].c = ""
-		}
-	}
-}
-
 func (rowSolver *RowSolver) wordIsValidInBoard(rowWord *MatchedWord) bool {
-	setRowWordInBoard(rowWord, &rowSolver.board)
+	rowSolver.board.addMatchedWord(rowWord)
 
 	isValid := rowSolver.board.isValid()
 
-	removeRowWordFromBoard(rowWord, &rowSolver.board)
+	rowSolver.board.removeMatchedWord(rowWord)
 
 	return isValid
 }

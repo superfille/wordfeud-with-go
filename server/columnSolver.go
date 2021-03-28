@@ -47,7 +47,7 @@ func (solver *ColumnSolver) solveColumn(playerChars string, column int) []Matche
 			continue
 		}
 
-		constructedWord := getConstructedColumn(&solver.board, len(playerChars), row, column)
+		constructedWord := solver.getConstructed(len(playerChars), row, column)
 		if constructedWord != "" {
 			cMatch := WordMatch{
 				constructedWord: constructedWord,
@@ -59,18 +59,12 @@ func (solver *ColumnSolver) solveColumn(playerChars string, column int) []Matche
 
 			matches := wordsThatMatchPositions(&cMatch, "column")
 
-			// result
-			matches = filterMatchedWords(func(matchedWord MatchedWord) bool {
-				return solver.wordIsValidInBoard(&matchedWord)
-			})(matches)
-
-			matches = mapMatched(func(matchedWord MatchedWord) MatchedWord {
-				matchedWord.points = solver.countPoints(&matchedWord)
-				return matchedWord
-			})(matches)
-
-			for i := 0; i < len(matches); i++ {
-				result = append(result, matches[i])
+			for index := 0; index < len(matches); index++ {
+				points := solver.getPoints(&matches[index])
+				if points > 0 {
+					matches[index].points = points
+					result = append(result, matches[index])
+				}
 			}
 		}
 	}
@@ -78,15 +72,15 @@ func (solver *ColumnSolver) solveColumn(playerChars string, column int) []Matche
 	return result
 }
 
-func getConstructedColumn(board *Board, playerLength int, startRow int, column int) string {
+func (columnSolver ColumnSolver) getConstructed(playerLength int, startRow int, column int) string {
 	charsUsed := 0
 	row := startRow
 	index := 0
 	constructedWord := ""
 
 	for row < boardLength {
-		if hasChar(board, row, column) {
-			constructedWord += board.tiles[row][column].c
+		if hasChar(&columnSolver.board, row, column) {
+			constructedWord += columnSolver.board.tiles[row][column].c
 			index++
 			row++
 			continue
@@ -99,7 +93,7 @@ func getConstructedColumn(board *Board, playerLength int, startRow int, column i
 		charsUsed++
 
 		// The next tile is not the end of the board and is not empty, we can continue
-		if row+1 < boardLength && hasChar(board, row+1, column) {
+		if row+1 < boardLength && hasChar(&columnSolver.board, row+1, column) {
 			index++
 			row++
 			continue
@@ -114,10 +108,11 @@ func getConstructedColumn(board *Board, playerLength int, startRow int, column i
 
 	splitted := strings.Split(constructedWord, "")
 	noStar := someString(splitted, func(c1 string) bool { return c1 != "*" })
-	hasStar := someString(splitted, func(c1 string) bool { return c1 == "*" })
-
-	if noStar && hasStar {
-		return constructedWord
+	if noStar {
+		hasStar := someString(splitted, func(c1 string) bool { return c1 == "*" })
+		if hasStar {
+			return constructedWord
+		}
 	}
 
 	return ""
@@ -158,38 +153,15 @@ func wordsThatMatchPositions(payload *WordMatch, direction string) []MatchedWord
 		})
 }
 
-func setColumnWordInBoard(columnWord *MatchedWord, board *Board) {
-	for i := 0; i < len(columnWord.word); i++ {
-		if board.tiles[columnWord.row+i][columnWord.column].fixed == false {
-			board.tiles[columnWord.row+i][columnWord.column].c = string(columnWord.word[i])
-		}
+func (columnSolver ColumnSolver) getPoints(matchedWord *MatchedWord) int {
+	columnSolver.board.addMatchedWord(matchedWord)
+	points := -1
+
+	if columnSolver.board.isValid() {
+		points = countAllPoints(&columnSolver.board)
 	}
-}
 
-func removeColumnWordFromBoard(columnWord *MatchedWord, board *Board) {
-	for i := 0; i < len(columnWord.word); i++ {
-		if board.tiles[columnWord.row+i][columnWord.column].fixed == false {
-			board.tiles[columnWord.row+i][columnWord.column].c = ""
-		}
-	}
-}
-
-func (columnSolver ColumnSolver) countPoints(columnWord *MatchedWord) int {
-	setColumnWordInBoard(columnWord, &columnSolver.board)
-
-	points := countAllPoints(&columnSolver.board)
-
-	removeColumnWordFromBoard(columnWord, &columnSolver.board)
+	columnSolver.board.removeMatchedWord(matchedWord)
 
 	return points
-}
-
-func (columnSolver ColumnSolver) wordIsValidInBoard(matchedWord *MatchedWord) bool {
-	setColumnWordInBoard(matchedWord, &columnSolver.board)
-
-	isValid := columnSolver.board.isValid()
-
-	removeColumnWordFromBoard(matchedWord, &columnSolver.board)
-
-	return isValid
 }
