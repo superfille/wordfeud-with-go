@@ -62,7 +62,7 @@ describe('Solver util', () => {
       expect(result).toBe(1);
     });
 
-    it('should be able to get correct match at position 1 on constructed word', () => {
+    it('should be able to get correct match at position 1 on constructed word 2', () => {
       const libraryWord = 'tear';
       const constructedWord = '****r';
   
@@ -80,7 +80,7 @@ describe('Solver util', () => {
       expect(result).toBe(0);
     });
 
-    it('should be able to get correct match at position 1 on constructed word', () => {
+    it('should be able to get correct match at position 1 on constructed word 3', () => {
       const libraryWord = 'tear';
       const constructedWord = 'tt***';
   

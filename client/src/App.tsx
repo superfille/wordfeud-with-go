@@ -6,7 +6,7 @@ import PlayerTiles from './Components/PlayerTiles';
 import WordTable from './Components/WordTable';
 import BoardReadSave from './Components/BoardReadSave';
 import { MatchedWord, NewTile, StartBoard, Tile } from "./Models/Tile";
-import { sortByPoints } from './Solvers/SolverUtil';
+import { sortByPoints, removeDuplicates } from './Solvers/SolverUtil';
 import * as BoardActions from "./Utils/BoardActions";
 import solverWorker from 'workerize-loader?inline!./Solvers/solver.worker'; // eslint-disable-line import/no-webpack-loader-syntax
 import { solveColumns } from "./Solvers/ColumnSolver";
@@ -192,10 +192,10 @@ export default class App extends React.Component<Props, State> {
       loading: true,
     }, () => {
       setTimeout(() => {
-        const result = [
+        const result = removeDuplicates([
           ...solveColumns(this.state.board, this.state.playerChars), 
           ...solveRows(this.state.board, this.state.playerChars)
-        ]
+        ])
 
         this.setState({
           matchedWords: sortByPoints(result).slice(0, 100),
@@ -214,8 +214,9 @@ export default class App extends React.Component<Props, State> {
     const workerInstance = solverWorker();
     workerInstance.addEventListener('message', (response: any) => {
       if (Array.isArray(response.data)) {
+        const result = removeDuplicates(response.data);
         this.setState({
-          matchedWords: sortByPoints(response.data).slice(0, 100),
+          matchedWords: sortByPoints(result).slice(0, 100),
           loading: false
         });
       }

@@ -88,12 +88,12 @@ const wordsThatMatchPositions = (payload: ColumnMatch): Array<MatchedWord> => {
     if (!positionAfterCurrentWordIsEmpty(libraryWord, payload)) {
       return accumulated
     }
-
-    if (isWordFine(libraryWord, payload.constructedWord, payload.playerChars)) {
+    const position = isWordFine(libraryWord, payload.constructedWord, payload.playerChars)
+    if (position >= 0) {
         accumulated.push({
           word: libraryWord,
           direction: 'column',
-          row: payload.row,
+          row: payload.row + position,
           column: payload.column,
           points: 0,
         })
@@ -110,7 +110,6 @@ const wordsThatMatchPositions = (payload: ColumnMatch): Array<MatchedWord> => {
  */
 const solve = (playerChars: string, board: Array<Array<Tile>>, column: number) => {
   const result: Array<MatchedWord> = [];
-  
   for (let row = 0; row < board.length; row++) {
     if (row > 0 && hasChar(board, row - 1, column)) {
       // We start words when there is nothing above

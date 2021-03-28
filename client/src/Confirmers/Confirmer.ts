@@ -11,7 +11,7 @@ const isStartOfHorizontalWord = (row: number, column: number, board: Array<Array
 
   // At the start of the board and tile to right is a char
   if (column === 0) {
-    if (board[row][column + 1].char !== '') {
+    if (board[row][column + 1].char.length === 1) {
       return true;
     }
     return false;
@@ -23,7 +23,7 @@ const isStartOfHorizontalWord = (row: number, column: number, board: Array<Array
   }
 
   // Somewhere in the board where there is no char to the left but one to the right
-  if (board[row][column - 1].char === '' && board[row][column + 1].char !== '') {
+  if (board[row][column - 1].char === '' && board[row][column + 1].char.length === 1) {
     return true;
   }
 
@@ -38,7 +38,7 @@ const isStartOfVerticalWord = (row: number, column: number, board: Array<Array<T
 
   // At the start of the board and a char is beneath this tile
   if (row === 0) {
-    if (board[row + 1][column].char !== '') {
+    if (board[row + 1][column].char.length === 1) {
       return true
     }
     return false;
@@ -50,7 +50,7 @@ const isStartOfVerticalWord = (row: number, column: number, board: Array<Array<T
   }
 
   // Somewhere in the board where there is no char above but there is one beneath
-  if (board[row - 1][column].char === '' && board[row + 1][column].char !== '') {
+  if (board[row - 1][column].char === '' && board[row + 1][column].char.length === 1) {
     return true;
   }
 
@@ -64,7 +64,7 @@ const getHorizontalWord = (row: number, column: number, board: Array<Array<Tile>
   let lastColumnOfWord = column;
   let word = '';
 
-  while (lastColumnOfWord < board[0].length && board[row][lastColumnOfWord].char !== '') {
+  while (lastColumnOfWord < board[0].length && board[row][lastColumnOfWord].char.length === 1) {
     word += board[row][lastColumnOfWord].char;
     lastColumnOfWord += 1;
   }
@@ -79,7 +79,7 @@ const getVerticalWord = (row: number, column: number, board: Array<Array<Tile>>)
   let lastRowOfWord = row;
   let word = '';
 
-  while (lastRowOfWord < board[0].length && board[lastRowOfWord][column].char !== '') {
+  while (lastRowOfWord < board[0].length && board[lastRowOfWord][column].char.length === 1) {
     word += board[lastRowOfWord][column].char;
     lastRowOfWord += 1;
     if (lastRowOfWord > 100) {
@@ -91,26 +91,26 @@ const getVerticalWord = (row: number, column: number, board: Array<Array<Tile>>)
 }
 
 const canGoLeft = (row: number, column: number, board: Array<Array<Tile>>) => {
-  return column - 1 >= 0 && board[row][column - 1].char !== '';
+  return column - 1 >= 0 && board[row][column - 1].char.length === 1;
 }
 
 const canGoRight = (row: number, column: number, board: Array<Array<Tile>>) => {
-  return column + 1 < board.length && board[row][column + 1].char !== '';
+  return column + 1 < board.length && board[row][column + 1].char.length === 1;
 }
 
 const canGoUp = (row: number, column: number, board: Array<Array<Tile>>) => {
-  return row - 1 >= 0 && board[row - 1][column].char !== '';
+  return row - 1 >= 0 && board[row - 1][column].char.length === 1;
 }
 
 const canGoDown = (row: number, column: number, board: Array<Array<Tile>>) => {
-  return row + 1 < board.length && board[row + 1][column].char !== '';
+  return row + 1 < board.length && board[row + 1][column].char.length === 1;
 }
 
 const totalNumberOfCharsInBoard = (board: Array<Array<Tile>>) => {
   let count = 0;
   for (let row = 0; row < board.length; row++) {
     for (let column = 0; column < board[row].length; column++) {
-      if (board[row][column].char !== '') {
+      if (board[row][column].char.length === 1) {
         count += 1;
       }
     }
@@ -149,7 +149,7 @@ const searchLabyrint = (row: number, column: number, board: Array<Array<Tile>>, 
 const wordsAreConnected = (board: Array<Array<Tile>>) => {
   for (let row = 0; row < board.length; row++) {
     for (let column = 0; column < board[row].length; column++) {
-      if (board[row][column].char !== '') {
+      if (board[row][column].char.length === 1) {
         return searchLabyrint(row, column, board, [{row, column}], 1) === totalNumberOfCharsInBoard(board)
       }
     }

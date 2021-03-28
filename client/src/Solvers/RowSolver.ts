@@ -105,13 +105,13 @@ const wordsThatMatchPositions = (payload: RowMatch): Array<MatchedWord> => {
     if (!positionAfterCurrentWordIsNotEmpty(libraryWord, payload)) {
       return accumulated
     }
-
-    if (isWordFine(libraryWord, payload.constructedWord, payload.playerChars)) {
+    const position = isWordFine(libraryWord, payload.constructedWord, payload.playerChars);
+    if (position >= 0) {
       accumulated.push({
         word: libraryWord,
         direction: 'row',
         row: payload.row,
-        column: payload.column,
+        column: payload.column + position,
         points: 0,
       });
     }

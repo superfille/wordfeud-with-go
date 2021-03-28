@@ -30,6 +30,14 @@ const sortByPoints = (matchedWords: Array<MatchedWord>): Array<MatchedWord> => {
   return matchedWords.sort((a, b) => b.points - a.points)
 }
 
+const removeDuplicates = (matchedWords: Array<MatchedWord>): Array<MatchedWord> => {
+  return matchedWords.reduce((previous, current) => {
+    return previous.find(m => m.direction === current.direction && m.row === current.row && m.column === current.column)
+      ? previous
+      : [...previous, current];
+  }, [] as Array<MatchedWord>)
+}
+
 /**
  * libraryWord matches constructedWord with constructedWord being able to contain *
  * which are all characters.
@@ -90,7 +98,7 @@ const missingCharactersInPlayerCharacters = (missing: string, playerCharacters: 
   })
 }
 
-const isWordFine = (libraryWord: string, constructedWord: string, playerChars: string):boolean => {
+const isWordFine = (libraryWord: string, constructedWord: string, playerChars: string): number => {
    // Get start of matching sequence of the constructedWord against the libraryWord
    const libraryWordStartInConstructedWord = getStartOfMatchingSequence(libraryWord, constructedWord);
    if (libraryWordStartInConstructedWord >= 0) {
@@ -101,22 +109,23 @@ const isWordFine = (libraryWord: string, constructedWord: string, playerChars: s
        if (missingCharacters !== '') {
          // check that the missing characters are in players characters list
          if (missingCharactersInPlayerCharacters(missingCharacters, playerChars)) {
-           return true;
+           return libraryWordStartInConstructedWord;
          }
       }
     }
   }
-  return false;
+  return -1;
 }
 
 const hasChar = (board: Array<Array<Tile>>, row: number, column: number): boolean => {
-  return board[row][column].char !== '';
+  return board[row][column].char.length === 1   ;
 }
 
 export {
   createArray,
   hasJokerAndRemoveJoker,
   sortByPoints,
+  removeDuplicates,
   matchedWordMatchesWord,
   hasChar,
   sequenceMatch,

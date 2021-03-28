@@ -23,6 +23,8 @@ import englishWords_23 from './English/englishWords_23.json';
 import englishWords_24 from './English/englishWords_24.json';
 import englishWords_25 from './English/englishWords_25.json';
 
+// import test from './English/test.json';
+
 export class WordHandler {
   private static _instance: WordHandler;
   private _words: Array<Array<string>> = [];
@@ -54,6 +56,10 @@ export class WordHandler {
       englishWords_24,
       englishWords_25,
     ]
+
+    // this._words = [
+    //   test
+    // ]
   }
 
   public static get Instance() {

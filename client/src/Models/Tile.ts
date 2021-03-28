@@ -23,7 +23,7 @@ export interface Tile {
 }
 
 export const finalTile = (char: string = ''): Tile => {
-  return { char, special: null, final: char !== '' }
+  return { char, special: null, final: char.length === 1 }
 }
 
 export const notFinalTile = (char: string = ''): Tile => {
