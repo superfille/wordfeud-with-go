@@ -133,7 +133,7 @@ func (solver Solver) getConstructed(row int, column int) string {
 	}
 
 	if hasStar && noStar {
-		return constructedWord // Return of its not just stars and not just no stars
+		return constructedWord
 	}
 	return ""
 }
@@ -146,15 +146,26 @@ func (solver Solver) wordsThatMatchPositions(payload *WordMatch) []MatchedWord {
 		if len(word) <= 1 || len(word) > len(payload.constructedWord) || solver.isTileAfterPopulated(word, payload) {
 			continue
 		}
+		position := isWordFine(word, payload.constructedWord, solver.playerChars)
+		if position >= 0 {
+			if solver.direction == "column" {
+				result = append(result, MatchedWord{
+					word:                 word,
+					hasNotFinalCharacter: false,
+					row:                  payload.row + position,
+					column:               payload.column,
+					points:               0,
+				})
+			} else {
+				result = append(result, MatchedWord{
+					word:                 word,
+					hasNotFinalCharacter: false,
+					row:                  payload.row,
+					column:               payload.column + position,
+					points:               0,
+				})
+			}
 
-		if isWordFine(word, payload.constructedWord, solver.playerChars) {
-			result = append(result, MatchedWord{
-				word:                 word,
-				hasNotFinalCharacter: false,
-				row:                  payload.row,
-				column:               payload.column,
-				points:               0,
-			})
 		}
 	}
 

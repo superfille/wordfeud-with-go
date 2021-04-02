@@ -30,6 +30,5 @@ func (library *Library) isWord(word string) bool {
 			return true
 		}
 	}
-
 	return false
 }

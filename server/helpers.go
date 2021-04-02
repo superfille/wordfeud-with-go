@@ -9,7 +9,7 @@ func hasChar(board *Board, row int, column int) bool {
 	return board.tiles[row][column].c != ""
 }
 
-func isWordFine(libraryWord string, constructedWord string, playerChars string) bool {
+func isWordFine(libraryWord string, constructedWord string, playerChars string) int {
 	// Get start of matching sequence of the constructedWord against the libraryWord
 	libraryWordStartInConstructedWord := getStartOfMatchingSequence(libraryWord, constructedWord)
 	if libraryWordStartInConstructedWord >= 0 {
@@ -20,12 +20,12 @@ func isWordFine(libraryWord string, constructedWord string, playerChars string) 
 			if missingCharacters != "" {
 				// check that the missing characters are in players characters list
 				if missingCharactersInPlayerCharacters(missingCharacters, playerChars) {
-					return true
+					return libraryWordStartInConstructedWord
 				}
 			}
 		}
 	}
-	return false
+	return -1
 }
 
 func getMissingCharacters(libraryWord string, constructedWord string, startInConstructedWord int) string {
@@ -77,10 +77,7 @@ func getStartOfMatchingSequence(libraryWord string, constructedWord string) int 
 		}
 
 		if sequenceMatch(libraryWord, strings.Join(constructedWordSplitted, "")) {
-			if index == -1 {
-				return 0
-			}
-			return index
+			return index + 1
 		}
 	}
 
@@ -94,6 +91,7 @@ func sequenceMatch(libraryWord string, constructedWord string) bool {
 		}
 
 		librarySplitted := strings.Split(libraryWord, "")
+
 		allTrue := true
 		// Sequence matches algorithm
 		for i := 0; i < len(librarySplitted); i++ {

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -177,7 +178,7 @@ func (board *Board) getVerticalWord(row int, column int) string {
 
 func (board *Board) isValid() bool {
 	if !wordsAreConnected(board) {
-		// fmt.Println("Board is not connected")
+		fmt.Println("Board is not connected")
 		return false
 	}
 
@@ -206,8 +207,8 @@ func (board *Board) isValid() bool {
 
 func (board *Board) printBoard() {
 	for row := 0; row < boardLength; row++ {
-		columns := strconv.Itoa(row + 1)
-		if row < 9 {
+		columns := strconv.Itoa(row)
+		if row <= 9 {
 			columns += "  | "
 		} else {
 			columns += " | "
@@ -217,14 +218,15 @@ func (board *Board) printBoard() {
 			for i := 0; i < boardLength; i++ {
 				if i < 9 {
 					if i == 8 {
-						columnIndexes += strconv.Itoa(i+1) + "  "
+						columnIndexes += strconv.Itoa(i) + "  "
 					} else {
-						columnIndexes += strconv.Itoa(i+1) + "   "
+						columnIndexes += strconv.Itoa(i) + "   "
 					}
 				} else {
-					columnIndexes += strconv.Itoa(i+1) + "  "
+					columnIndexes += strconv.Itoa(i) + "  "
 				}
 			}
+			fmt.Println(columnIndexes)
 		}
 		for column := 0; column < boardLength; column++ {
 			if board.tiles[row][column].c == "" {
@@ -233,6 +235,7 @@ func (board *Board) printBoard() {
 				columns += board.tiles[row][column].c + " | "
 			}
 		}
+		fmt.Println(columns)
 	}
 }
 
@@ -296,9 +299,16 @@ func (board *Board) hasChar(row int, column int) bool {
 func (board *Board) getPoints(matchedWord *MatchedWord, direction string) int {
 	board.addMatchedWord(matchedWord, direction)
 	points := -1
-
+	if "edgar" == matchedWord.word && matchedWord.column == 8 && matchedWord.row == 3 {
+		fmt.Println("-----------------------------------------------------")
+		board.printBoard()
+	}
 	if board.isValid() {
 		points = countAllPoints(board)
+	}
+
+	if "edgar" == matchedWord.word && matchedWord.column == 8 && matchedWord.row == 3 {
+		fmt.Println("-----------------------------------------------------")
 	}
 
 	board.removeMatchedWord(matchedWord, direction)

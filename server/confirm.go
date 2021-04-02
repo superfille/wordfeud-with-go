@@ -21,7 +21,7 @@ func totalNumberOfCharsInBoard(board *Board) int {
 	for row := 0; row < boardLength; row++ {
 		for column := 0; column < boardLength; column++ {
 			if board.tiles[row][column].c != "" {
-				count += 1
+				count++
 			}
 		}
 	}
@@ -56,22 +56,22 @@ func findFirstChar(board *Board) Position {
 	}
 }
 
-func searchLabyrint(row int, column int, board *Board, visited []Position, count int) int {
-	visited = append(visited, Position{row: row, column: column})
+func searchLabyrint(row int, column int, board *Board, visited *[]Position, count int) int {
+	*visited = append(*visited, Position{row: row, column: column})
 
-	if canGoRight(row, column, board) && !hasVisited(row, column+1, visited) {
+	if canGoRight(row, column, board) && !hasVisited(row, column+1, *visited) {
 		count = searchLabyrint(row, column+1, board, visited, count+1)
 	}
 
-	if canGoDown(row, column, board) && !hasVisited(row+1, column, visited) {
+	if canGoDown(row, column, board) && !hasVisited(row+1, column, *visited) {
 		count = searchLabyrint(row+1, column, board, visited, count+1)
 	}
 
-	if canGoLeft(row, column, board) && !hasVisited(row, column-1, visited) {
+	if canGoLeft(row, column, board) && !hasVisited(row, column-1, *visited) {
 		count = searchLabyrint(row, column-1, board, visited, count+1)
 	}
 
-	if canGoUp(row, column, board) && !hasVisited(row-1, column, visited) {
+	if canGoUp(row, column, board) && !hasVisited(row-1, column, *visited) {
 		count = searchLabyrint(row-1, column, board, visited, count+1)
 	}
 
@@ -83,7 +83,9 @@ func wordsAreConnected(board *Board) bool {
 	positionOfFirst := findFirstChar(board)
 
 	if positionOfFirst.column >= 0 && positionOfFirst.row >= 0 {
-		return searchLabyrint(positionOfFirst.row, positionOfFirst.column, board, []Position{}, 1) == charsInBoard
+		visited := []Position{}
+		result := searchLabyrint(positionOfFirst.row, positionOfFirst.column, board, &visited, 1)
+		return result == charsInBoard
 	}
 	return true
 }
