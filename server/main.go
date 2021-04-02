@@ -28,11 +28,14 @@ func init() {
 	words2 := solver.solve("asdfeg", "row")
 	allWords := append(words, words2...)
 
-	sortByPoints(allWords)
+	sortByPoints(&allWords)
+	allWords = uniqueMatchedWords(&allWords)
 	if len(allWords) > 10 {
 		allWords = allWords[0:10]
 	}
 	fmt.Println("allWords", allWords)
+	// mainBoard.printWithMatchedWord(&MatchedWord{
+	// 	word: "frags", points: 35, hasNotFinalCharacter: false, row: 8, column: 6, direction: "row"})
 
 	// mainBoard.printWithMatchedWord(&allWords[0])
 	// bol := isWordFine("filip", "*ilip", "okfoe")

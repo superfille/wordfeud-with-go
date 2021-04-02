@@ -239,10 +239,10 @@ func (board *Board) printBoard() {
 	}
 }
 
-func (board *Board) printWithMatchedWord(matchedWord *MatchedWord, direction string) {
-	board.addMatchedWord(matchedWord, direction)
+func (board *Board) printWithMatchedWord(matchedWord *MatchedWord) {
+	board.addMatchedWord(matchedWord, matchedWord.direction)
 	board.printBoard()
-	board.removeMatchedWord(matchedWord, direction)
+	board.removeMatchedWord(matchedWord, matchedWord.direction)
 }
 
 func (board *Board) printWithSpecials() {

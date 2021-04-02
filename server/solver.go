@@ -16,6 +16,7 @@ type MatchedWord struct {
 	hasNotFinalCharacter bool
 	row                  int
 	column               int
+	direction            string
 }
 
 type WordMatch struct {
@@ -155,6 +156,7 @@ func (solver Solver) wordsThatMatchPositions(payload *WordMatch) []MatchedWord {
 					row:                  payload.row + position,
 					column:               payload.column,
 					points:               0,
+					direction:            solver.direction,
 				})
 			} else {
 				result = append(result, MatchedWord{
@@ -163,6 +165,7 @@ func (solver Solver) wordsThatMatchPositions(payload *WordMatch) []MatchedWord {
 					row:                  payload.row,
 					column:               payload.column + position,
 					points:               0,
+					direction:            solver.direction,
 				})
 			}
 

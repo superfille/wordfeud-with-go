@@ -120,12 +120,33 @@ func sequenceMatch(libraryWord string, constructedWord string) bool {
 	return false
 }
 
-func sortByPoints(matchedWords []MatchedWord) {
-	sort.SliceStable(matchedWords, func(i, j int) bool {
-		return matchedWords[i].points > matchedWords[j].points
+func sortByPoints(matchedWords *[]MatchedWord) {
+	sort.SliceStable((*matchedWords), func(i, j int) bool {
+		return (*matchedWords)[i].points > (*matchedWords)[j].points
 	})
 }
 
 func removeIndex(s []string, index int) []string {
 	return append(s[:index], s[index+1:]...)
+}
+
+func uniqueMatchedWords(matchedWords *[]MatchedWord) []MatchedWord {
+	result := []MatchedWord{}
+
+	for i := 0; i < len(*matchedWords); i++ {
+		contains := false
+		for j := 0; j < len(result); j++ {
+			if result[j].column == (*matchedWords)[i].column && result[j].row == (*matchedWords)[i].row && result[j].word == (*matchedWords)[i].word {
+				contains = true
+				break
+			}
+		}
+
+		if !contains {
+			result = append(result, (*matchedWords)[i])
+		}
+
+	}
+
+	return result
 }
