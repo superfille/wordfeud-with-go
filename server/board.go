@@ -178,7 +178,7 @@ func (board *Board) getVerticalWord(row int, column int) string {
 
 func (board *Board) isValid() bool {
 	if !wordsAreConnected(board) {
-		fmt.Println("Board is not connected")
+		// fmt.Println("Board is not connected")
 		return false
 	}
 
@@ -299,16 +299,9 @@ func (board *Board) hasChar(row int, column int) bool {
 func (board *Board) getPoints(matchedWord *MatchedWord, direction string) int {
 	board.addMatchedWord(matchedWord, direction)
 	points := -1
-	if "edgar" == matchedWord.word && matchedWord.column == 8 && matchedWord.row == 3 {
-		fmt.Println("-----------------------------------------------------")
-		board.printBoard()
-	}
+
 	if board.isValid() {
 		points = countAllPoints(board)
-	}
-
-	if "edgar" == matchedWord.word && matchedWord.column == 8 && matchedWord.row == 3 {
-		fmt.Println("-----------------------------------------------------")
 	}
 
 	board.removeMatchedWord(matchedWord, direction)
