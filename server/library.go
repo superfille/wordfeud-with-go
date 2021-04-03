@@ -7,7 +7,7 @@ import (
 )
 
 type Library struct {
-	words []string //
+	words []string
 }
 
 func (library *Library) openLibrary(path string) {
