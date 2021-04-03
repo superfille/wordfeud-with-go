@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "..\\solver"
+		},
+		{
+			"path": "..\\client"
 		}
 	],
 	"settings": {}
