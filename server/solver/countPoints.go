@@ -1,4 +1,4 @@
-package main
+package solver
 
 var allPoints [][]string = [][]string{
 	/* 0 */ {},

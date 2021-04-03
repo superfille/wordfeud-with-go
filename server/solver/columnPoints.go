@@ -1,4 +1,4 @@
-package main
+package solver
 
 func specialsColumn(currentPoints int, matchedWord MatchedWord, board *Board) int {
 	points := currentPoints

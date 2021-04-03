@@ -1,4 +1,4 @@
-package main
+package solver
 
 func canGoLeft(row int, column int, board *Board) bool {
 	return column-1 >= 0 && board.tiles[row][column-1].c != ""
