@@ -7,6 +7,10 @@ import (
 
 var library Library
 
+func main() {
+	fmt.Println("hejsanasjnajs")
+}
+
 func getWords(playerChars string, parseBoard string) []MatchedWord {
 	library.openLibrary("english")
 
